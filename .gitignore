@@ -1,17 +1,2 @@
-# Ignore log files
-*.log
-
-# Ignore directories
-/lib/
-/lib64/
-/images/
-/bin/
-/include/
-__pycache__/
-
-# Ignore specific files
-seleniumStarter.txt
-pyenv.cfg
-index.html
-hasher.py
-BLANK_README.md
+# Created by venv; see https://docs.python.org/3/library/venv.html
+*
