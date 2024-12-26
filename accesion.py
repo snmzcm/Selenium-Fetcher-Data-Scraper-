@@ -3,17 +3,20 @@ from selenium.webdriver.common.by import By
 import time
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.firefox.options import Options
 import pandas as pd
 
 def accesion():
-    driver = webdriver.Firefox()  # or webdriver.Firefox() for Firefox
+    firefox_options = Options()
+    firefox_options.add_argument("--headless")
+    driver = webdriver.Firefox(options=firefox_options)
 
     try:
         # Open the search page
         driver.get('https://www.ncbi.nlm.nih.gov/nuccore')  # Replace with the actual URL of the search page
 
         # Locate the input field with id 'term' and enter the search query
-        search_input = driver.find_element(By.ID, 'term')
+        search_input = WebDriverWait(driver, 10).until( EC.presence_of_element_located((By.ID, 'term')) )
         search_input.send_keys('txid545932[Organism:exp]')  # Enter the search term
 
         # Locate the search button with id 'search' and click it

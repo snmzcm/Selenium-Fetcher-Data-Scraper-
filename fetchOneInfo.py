@@ -3,44 +3,52 @@ from selenium.webdriver.common.by import By
 import time
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import re
+import pandas as pd
 
 # Initialize the web driver (make sure the ChromeDriver is in your PATH)
-driver = webdriver.Firefox()  # or webdriver.Firefox() for Firefox
+driver = webdriver.Firefox()  # or webdriver.Chrome() for Chrome
 
-try:
-    # Open the search page
-    driver.get('https://www.ncbi.nlm.nih.gov/nuccore/')  # Replace with the actual URL of the search page
+def fetchTitle():
+    try:
+        # Open the search page
+        driver.get('https://www.ncbi.nlm.nih.gov/nuccore/OQ992551.1')  # Replace with the actual URL of the search page
 
-    # Locate the input field with id 'term' and enter the search query
-    search_input = driver.find_element(By.ID, 'term')
-    search_input.send_keys('txid545932[Organism:exp]')  # Enter the search term
+        # Wait for the results to load
+        time.sleep(8)  # Adjust time as necessary or use WebDriverWait for better handling
 
-    # Locate the search button with id 'search' and click it
-    search_button = driver.find_element(By.ID, 'search')
-    search_button.click()  # Click the search button
-    kacadetlistelenecek = WebDriverWait(driver, 10).until( EC.presence_of_element_located((By.XPATH, "//*[text()='20 per page']")) )
-    kacadetlistelenecek.click()
-    menu_item = WebDriverWait(driver, 10).until( EC.presence_of_element_located((By.ID, "ps100")) ) 
-    menu_item.click()
+        # Optionally, you may want to fetch and print the results here
+        results = driver.find_elements(By.CLASS_NAME, 'genbank')  # Update the selector based on actual results
+        titleVar = []
+        for i in results:
+            titleVar.append(i.text)
+        newTitleVar = ' '.join(titleVar)
 
+        # Regex pattern to capture any text between TITLE and JOURNAL
+        patternForReg = r"TITLE\s+([\s\S]+?)\s+JOURNAL"
 
-    # Wait for the results to load
-    time.sleep(8)  # Adjust time as necessary or use WebDriverWait for better handling
+        findReg = re.search(patternForReg, newTitleVar)
+        
+        # Check if a match is found
+        if findReg:
+            extracted_value = findReg.group(1)
+            print(f"Extracted value: {extracted_value}")
+        else:
+            print("No match found in the text.")
 
-    # Optionally, you may want to fetch and print the results here
-    results = driver.find_elements(By.CLASS_NAME,'title')  # Updat the selector based on actual results
-    time.sleep(3)
-    #check Type results if is it a list
-    kayitListeItemIsmi = "//*[text()='{0}']".format(results[0])
-    print(kayitListeItemIsmi)
-    kayitAdi = WebDriverWait(driver, 10).until( EC.presence_of_element_located((By.XPATH, kayitListeItemIsmi)) )
-    kayitAdi.click()
-    # sayac = 1
-    # for result in results:
-    #     print(str(sayac) + ' ' + result.text)
+        time.sleep(3)
 
-    #     sayac= sayac + 1
+        # Check type of results if it is a list
+        kayitListeItemIsmi = "//*[text()='{0}']".format("PQ676539.1")
+        print(kayitListeItemIsmi)
+        kayitAdi = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, kayitListeItemIsmi))
+        )
+        kayitAdi.click()
 
-finally:
-    # Close the browser
-    driver.quit()
+    finally:
+        # Close the browser
+        driver.quit()
+
+# Call the fetchTitle function to see if it works
+fetchTitle()
