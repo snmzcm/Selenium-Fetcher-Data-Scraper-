@@ -28,23 +28,19 @@ def fetchTitle():
         patternForReg = r"TITLE\s+([\s\S]+?)\s+JOURNAL"
 
         findReg = re.search(patternForReg, newTitleVar)
+        df = pd.read_csv('table2.csv')
+        
         
         # Check if a match is found
         if findReg:
             extracted_value = findReg.group(1)
-            print(f"Extracted value: {extracted_value}")
+            print(extracted_value)
+            df.iloc[12 - 1,2] = str(extracted_value)
+            df.to_csv('table2.csv', index=False)
         else:
             print("No match found in the text.")
 
         time.sleep(3)
-
-        # Check type of results if it is a list
-        kayitListeItemIsmi = "//*[text()='{0}']".format("PQ676539.1")
-        print(kayitListeItemIsmi)
-        kayitAdi = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, kayitListeItemIsmi))
-        )
-        kayitAdi.click()
 
     finally:
         # Close the browser
