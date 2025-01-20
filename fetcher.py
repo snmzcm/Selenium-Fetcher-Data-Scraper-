@@ -17,14 +17,14 @@ def fetcher():
 
         # Locate the input field with id 'term' and enter the search query
         search_input = WebDriverWait(driver, 10).until( EC.presence_of_element_located((By.ID, 'term')) )
-        search_input.send_keys('txid545932[Organism:exp]')  # Enter the search term
+        search_input.send_keys('txid1921407[Organism:exp]')  # Enter the search term
 
         # Locate the search button with id 'search' and click it
         search_button = driver.find_element(By.ID, 'search')
         search_button.click()  # Click the search button
         kacadetlistelenecek = WebDriverWait(driver, 10).until( EC.presence_of_element_located((By.XPATH, "//*[text()='20 per page']")) )
         kacadetlistelenecek.click()
-        menu_item = WebDriverWait(driver, 10).until( EC.presence_of_element_located((By.ID, "ps100")) ) 
+        menu_item = WebDriverWait(driver, 10).until( EC.presence_of_element_located((By.ID, "ps200")) ) 
         menu_item.click()
 
         # Wait for the results to load
